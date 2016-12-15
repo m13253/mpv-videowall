@@ -39,7 +39,7 @@ def main(argv: [str]) -> int:
     media = argv[3]
     mpv_args = argv[4:]
 
-    logging.info("Listening on '%s:%s" % (argv[1], argv[2]))
+    logging.info("Listening on '%s:%s'" % (argv[1], argv[2]))
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(addr)
     ipc_path = '/tmp/mpv-%d.sock' % os.getpid()
