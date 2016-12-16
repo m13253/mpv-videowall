@@ -8,25 +8,29 @@ import struct
 import subprocess
 import sys
 
+
 def ipc_command(ipc: open, command: [object]) -> object:
     req_id = ipc_command.request_id
     ipc_command.request_id += 1
     line = '{"command":%s,"request_id":%d}\n' % (json.dumps(command), req_id)
-    #logging.info('>> %s' % line.strip())
+    # logging.info('>> %s' % line.strip())
     ipc.write(line)
     ipc.flush()
     for line in ipc:
-        #logging.info('<< %s' % line.strip())
+        # logging.info('<< %s' % line.strip())
         obj = json.loads(line)
         if 'err' in obj and obj['error'] != 'success':
             logging.error('mpv error: %r' % obj['error'])
         if obj.get('request_id') == req_id:
             return obj.get('data')
 
+
 ipc_command.request_id = 0
+
 
 def clamp(value: float, low: float, high: float) -> float:
     return min(max(value, low), high)
+
 
 def main(argv: [str]) -> int:
     logging.basicConfig(level=logging.INFO)
@@ -44,11 +48,11 @@ def main(argv: [str]) -> int:
     sock.bind(addr)
     ipc_path = '/tmp/mpv-%d.sock' % os.getpid()
     logging.info('Starting mpv on %s' % ipc_path)
-    mpv = subprocess.Popen([
+    subprocess.Popen([
         'mpv', '--idle=yes', '--input-ipc-server=' + ipc_path
     ] + mpv_args)
     ipc = None
-    
+
     while True:
         buf, master = sock.recvfrom(8)
         target, = struct.unpack('!d', buf)
@@ -78,6 +82,7 @@ def main(argv: [str]) -> int:
                 ipc_command(ipc, ['set_property', 'time-pos', target])
 
     return 0
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

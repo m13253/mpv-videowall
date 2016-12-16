@@ -6,6 +6,7 @@ import struct
 import sys
 import time
 
+
 def broadcast_pos(sock: socket.socket, pos: float, clients: [(str, int)]) -> [int]:
     data = struct.pack('!d', pos)
     sent = []
@@ -15,6 +16,7 @@ def broadcast_pos(sock: socket.socket, pos: float, clients: [(str, int)]) -> [in
         if written != 8:
             logging.error("Cannot send to '%s:%d'" % client)
     return sent
+
 
 def main(argv: [str]) -> int:
     logging.basicConfig(level=logging.INFO)
@@ -29,7 +31,7 @@ def main(argv: [str]) -> int:
         clients.append((addr, int(port)))
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    
+
     while True:  # Loop playback
         start_time = time.monotonic()
         pos = 0
@@ -42,6 +44,7 @@ def main(argv: [str]) -> int:
             logging.info('Position: %.9f' % pos)
 
     return 0
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
