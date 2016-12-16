@@ -45,6 +45,7 @@ def main(argv: [str]) -> int:
 
     logging.info("Listening on '%s:%s'" % (argv[1], argv[2]))
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(addr)
     ipc_path = '/tmp/mpv-%d.sock' % os.getpid()
     logging.info('Starting mpv on %s' % ipc_path)
