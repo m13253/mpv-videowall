@@ -1,0 +1,3 @@
+[submodule "NaiveSocketLibrary"]
+	path = NaiveSocketLibrary
+	url = https://github.com/Jamesits/NaiveSocketLibrary.git

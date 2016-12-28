@@ -56,7 +56,7 @@ def main(argv: [str]) -> int:
 
     while True:
         buf, master = sock.recvfrom(8)
-        target, = struct.unpack('!d', buf)
+        target, = struct.unpack('=d', buf)
         if ipc is None:
             if os.path.exists(ipc_path):
                 ipc_sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
