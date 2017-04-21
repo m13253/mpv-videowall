@@ -33,12 +33,12 @@ int main(int argc, char *argv[])
     double length;
     sscanf(argv[1], "%d", &port);
     sscanf(argv[2], "%lf", &length);
-    SOCKADDR *peer = NSLEndpointV4("255.255.255.255", port);
+    SOCKADDR *peer = NSLEndpointV4("127.0.0.1", port);
     setsockopt(sConnection, SOL_SOCKET, SO_BROADCAST, &so_broadcast, sizeof so_broadcast);
 
     double pos = 0;
     broadcast_pos(sConnection, pos, peer);
-    puts("here");
+
     while (1) {
         pos += 1;
         if (pos > length) pos = 0;
