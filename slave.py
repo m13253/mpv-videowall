@@ -78,11 +78,12 @@ def main(argv: [str]) -> int:
             if pos is not None and -3 < target - pos < 3:
                 ipc_command(ipc, ['set_property', 'speed', clamp((target - pos) / 2 + 1, 0.5, 2)])
             else:
-                ipc_command(ipc, ['set_property', 'speed', 1])
                 hr_seek = ipc_command(ipc, ['get_property', 'hr-seek'])
                 if hr_seek:
+                    ipc_command(ipc, ['set_property', 'speed', 1])
                     ipc_command(ipc, ['set_property', 'time-pos', target])
                 else:
+                    ipc_command(ipc, ['set_property', 'speed', 0.5])
                     ipc_command(ipc, ['set_property', 'time-pos', target + 3])
             ipc_command(ipc, ['set_property', 'pause', 'no'])
 
