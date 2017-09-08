@@ -50,7 +50,7 @@ def main(argv: [str]) -> int:
     ipc_path = '/tmp/mpv-%d.sock' % os.getpid()
     logging.info('Starting mpv on %s' % ipc_path)
     subprocess.Popen([
-        'mpv', '--idle=yes', '--input-ipc-server=' + ipc_path
+        'mpv', '--idle=yes', '--input-ipc-server=' + ipc_path, '--keep-open=always'
     ] + mpv_args)
     ipc = None
 
@@ -64,8 +64,7 @@ def main(argv: [str]) -> int:
                 os.unlink(ipc_path)
                 ipc = ipc_sock.makefile('rw')
                 ipc_command(ipc, ['set_property', 'audio-pitch-correction', 'yes'])
-                ipc_command(ipc, ['set_property', 'hr-seek', 'yes'])
-                ipc_command(ipc, ['set_property', 'keep-open', 'yes'])
+                ipc_command(ipc, ['set_property', 'autosync', '1'])
                 ipc_command(ipc, ['loadfile', media, 'replace'])
             else:
                 logging.error('IPC socket not ready, retrying')
@@ -80,7 +79,12 @@ def main(argv: [str]) -> int:
                 ipc_command(ipc, ['set_property', 'speed', clamp(target - pos + 1, 0.5, 2)])
             else:
                 ipc_command(ipc, ['set_property', 'speed', 1])
-                ipc_command(ipc, ['set_property', 'time-pos', target])
+                hr_seek = ipc_command(ipc, ['get_property', 'hr-seek'])
+                if hr_seek == 'yes':
+                    ipc_command(ipc, ['set_property', 'time-pos', target])
+                else:
+                    ipc_command(ipc, ['set_property', 'time-pos', target + 3])
+            ipc_command(ipc, ['set_property', 'pause', 'no'])
 
     return 0
 
