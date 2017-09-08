@@ -80,7 +80,7 @@ def main(argv: [str]) -> int:
             else:
                 ipc_command(ipc, ['set_property', 'speed', 1])
                 hr_seek = ipc_command(ipc, ['get_property', 'hr-seek'])
-                if hr_seek == 'yes':
+                if hr_seek:
                     ipc_command(ipc, ['set_property', 'time-pos', target])
                 else:
                     ipc_command(ipc, ['set_property', 'time-pos', target + 3])
