@@ -50,7 +50,7 @@ def main(argv: [str]) -> int:
     ipc_path = '/tmp/mpv-%d.sock' % os.getpid()
     logging.info('Starting mpv on %s' % ipc_path)
     subprocess.Popen([
-        'mpv', '--idle=yes', '--input-ipc-server=' + ipc_path, '--keep-open=always'
+        'mpv', '--idle=yes', '--input-unix-socket=' + ipc_path, '--keep-open=always'
     ] + mpv_args)
     ipc = None
 
